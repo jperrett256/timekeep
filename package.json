@@ -1,0 +1,15 @@
+{
+  "name": "timekeep",
+  "version": "1.0.0",
+  "description": "Track how your time is spent.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jquery": "^3.4.1"
+  }
+}

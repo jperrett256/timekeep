@@ -1,0 +1,130 @@
+@font-face {
+	font-family: Blender;
+	font-weight: normal;
+	src: url(fonts/Blender/Blender-Pro-Thin.otf);
+}
+
+@font-face {
+	font-family: Blender;
+	font-weight: bold;
+	src: url(fonts/Blender/Blender-Pro-Bold.otf);
+}
+
+* {
+	box-sizing: inherit;
+}
+
+body {
+	box-sizing: border-box;
+	display: flex;
+	font-family: Blender;
+	font-size: 14px;
+	user-select: none;
+	margin: 0px;
+	overflow: hidden;
+}
+
+body:hover {
+	cursor: default;
+}
+
+#sidepanel {
+	background-color: #111111;
+	width: 100px;
+	height: 100%;
+}
+
+#sidepanel .draggable {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	height: calc(100% - 10px);
+	margin-left: 5px;
+}
+
+#sidepanel .draggable.maximised {
+	height: 100%;
+	margin: 0;
+}
+
+#main {
+	display: flex;
+	flex-direction: column;
+	flex: 1 0 auto;
+	height: 100%;
+}
+
+.draggable {
+	-webkit-app-region: drag;
+}
+
+#titlebar {
+	display: flex;
+	justify-content: space-between;
+	height: 30px;
+	width: 100%;
+}
+
+#titlebar .draggable {
+	margin-top: 5px;
+	height: calc(100% - 5px);
+	width: 100%;
+}
+
+#titlebar .draggable.maximised {
+	margin-top: 0;
+	height: 100%;
+}
+
+#window-btn-container {
+	display: flex;
+	height: 30px;
+	text-align: center;
+}
+
+#window-btn-container:hover {
+	cursor: pointer;
+}
+
+.window-btn {
+	-webkit-app-region: no-drag;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: inherit;
+	width: 32px;
+	transition: background-color 0.2s ease;
+}
+
+.window-btn:hover {
+	background-color: #F2F2F2;
+	transition: background-color 0.2s ease;
+}
+
+#close-btn:hover {
+	background-color: #FF4444;
+}
+
+.window-btn .icon {
+	height: 8px;
+	display: inline-block;
+	flex: 0 0 auto;
+	pointer-events: none;
+}
+
+#close-btn:hover .icon {
+	filter: invert(100%);
+	transition: filter 0.2s ease;
+}
+
+.content {
+	display: flex;
+	flex: 1 0 auto;
+	padding: 30px;
+}
+
+.content .annotation {
+	flex: 0 0 auto;
+	font-size: 18px;
+	font-weight: bold;
+	padding: 10px;
+}
