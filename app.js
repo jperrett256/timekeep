@@ -16,14 +16,28 @@ app.on('ready', function () {
 	main_window.setMinimumSize(700, 500);
     main_window.loadURL('file://' + __dirname + '/content/index.html');
 
+    let clockRunning = false;
+
     tray = new Tray(__dirname + '/icons/clock.png');
     tray.on('click', () => main_window.show());
-    const contextMenu = Menu.buildFromTemplate([
-    	{
-    		label: 'Quit',
-    		click: () => app.quit()
-    	}
-    ]);
-    tray.setToolTip('This is timekeep.');
-    tray.setContextMenu(contextMenu);
+    tray.setToolTip('timekeep');
+    tray.setContextMenu(getContextMenu());
+
+    function getContextMenu() {
+    	return Menu.buildFromTemplate([
+    		{
+    			label: clockRunning ? 'Pause' : 'Start',
+    			click: toggleClock
+    		},
+    		{
+    			label: 'Quit',
+    			click: () => app.quit()
+    		}
+    	]);
+    }
+
+    function toggleClock() {
+    	clockRunning = !clockRunning;
+    	tray.setContextMenu(getContextMenu());
+    }
 });
