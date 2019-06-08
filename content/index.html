@@ -9,6 +9,38 @@
 				$(this).addClass('selected');
 			});
 		});
+
+		const { ipcRenderer } = require('electron');
+
+		function formatTime(time) {
+			let format = (value) => ('0' + value).slice(-2);
+
+			let day = format(time.getDate());
+			let month = format(time.getMonth() + 1);
+			let year = format(time.getFullYear());
+			let hour = format(time.getHours());
+			let minute = format(time.getMinutes());
+			let second = format(time.getSeconds());
+			return {
+				date: `${day}/${month}/${year}`,
+				time: `${hour}:${minute}:${second}`
+			};
+		}
+
+		ipcRenderer.on('start-clock', (event, time) => {
+			let start = new Date(time);
+			let formatted = formatTime(start);
+			$('#main .time').html(
+				`<div>${formatted.date}</div>` +
+				`<div>${formatted.time}</div>`
+			);
+		});
+
+		ipcRenderer.on('stop-clock', (event) => {
+			$('#main .time').text('STOPPED');
+		});
+
+		ipcRenderer.send('update-renderer-time');
 	</script>
 </head>
 <body>
@@ -61,7 +93,7 @@
 			</div>
 		</div>
 		<div class="content">
-			<div class="annotation">CONTENT</div>
+			<div class="time">STOPPED</div>
 		</div>
 	</div>
 </body>

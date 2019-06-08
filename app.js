@@ -1,8 +1,8 @@
-const { app, BrowserWindow, nativeImage, Menu, Tray } = require('electron');
+const { app, BrowserWindow, nativeImage, Menu, Tray, ipcMain } = require('electron');
 
 let tray = null;
 app.on('ready', function () {
-    let main_window = new BrowserWindow({
+    let win = new BrowserWindow({
     	webPreferences: {
     		nodeIntegration: true
     	},
@@ -13,15 +13,18 @@ app.on('ready', function () {
         icon: nativeImage.createFromPath(__dirname + '/icons/clock.png')
     });
 
-	main_window.setMinimumSize(700, 500);
-    main_window.loadURL('file://' + __dirname + '/content/index.html');
+	win.setMinimumSize(700, 500);
+    win.loadURL('file://' + __dirname + '/content/index.html');
 
     let clockRunning = false;
+    let clockStartTime;
 
     tray = new Tray(__dirname + '/icons/clock.png');
-    tray.on('click', () => main_window.show());
+    tray.on('click', () => win.show());
     tray.setToolTip('timekeep');
     tray.setContextMenu(getContextMenu());
+
+    ipcMain.on('update-renderer-time', updateTime);
 
     function getContextMenu() {
     	return Menu.buildFromTemplate([
@@ -38,6 +41,16 @@ app.on('ready', function () {
 
     function toggleClock() {
     	clockRunning = !clockRunning;
+    	if (clockRunning) clockStartTime = Date.now();
+    	updateTime();
     	tray.setContextMenu(getContextMenu());
+    }
+
+    function updateTime() {
+    	if (clockRunning) {
+    		win.webContents.send('start-clock', clockStartTime);
+    	} else {
+    		win.webContents.send('stop-clock');
+    	}
     }
 });
