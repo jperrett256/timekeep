@@ -3,14 +3,43 @@
 	<link rel="stylesheet" href="style.css" />
 	<script>window.$ = window.jQuery = require('jquery');</script>
 	<script>
-		$(function() {
-			$('.task-list-item').click(function() {
-				$('.task-list-item').removeClass('selected');
-				$(this).addClass('selected');
-			});
-		});
-
 		const { ipcRenderer } = require('electron');
+
+		$(function() {
+
+			$('.task-list-container .add-btn').click(function() {
+				// TODO name input
+				let name = "project_" + $('.task-list-item').length
+				ipcRenderer.send('add-new-task', name);
+			});
+
+			ipcRenderer.on('task-state-updated', (event, state) => {
+				showTasks(state);
+			});
+
+			ipcRenderer.send('get-updated-task-state');
+
+			function showTasks(state) {
+				$('.task-list-item').off('click'); // remove any previous event listeners
+
+				$('.task-list').html(Object.keys(state.tasks).map((task) => {
+					let name = state.tasks[task].name;
+					let selected = state.currentTask == task ? ' selected' : '';
+					return (
+						`<div class="task-list-item${selected}" id="${task}">` +
+							'<div class="item-icon"></div>' +
+							`<div class="item-content">${name}</div>` +
+						'</div>'
+					);
+				}).join(''));
+
+				$('.task-list-item').click(function() {
+					$('.task-list-item').removeClass('selected');
+					$(this).addClass('selected');
+					ipcRenderer.send('update-current-task', $(this).attr('id'));
+				});
+			}
+		});
 
 		function formatTime(time) {
 			let format = (value) => ('0' + value).slice(-2);
@@ -48,31 +77,10 @@
 		<div class="draggable"></div>
 		<div class="task-list-container">
 			<div class="title">TASKS</div>
-			<div class="task-list">
-				<div class="task-list-item">
-					<div class="item-icon"></div>
-					<div class="item-content">
-						timekeep
-					</div>
-				</div>
-				<div class="task-list-item">
-					<div class="item-icon"></div>
-					<div class="item-content">
-						snake-assembly
-					</div>
-				</div>
-				<div class="task-list-item">
-					<div class="item-icon"></div>
-					<div class="item-content">
-						bookmark
-					</div>
-				</div>
-				<div class="task-list-item">
-					<div class="item-icon"></div>
-					<div class="item-content">
-						projects-list
-					</div>
-				</div>
+			<div class="task-list"></div>
+			<div class="add-btn">
+				<div class="icon"></div>
+				<div class="text">add</div>
 			</div>
 		</div>
 	</div>

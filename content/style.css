@@ -54,12 +54,20 @@ body:hover {
 }
 
 .task-list-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	position: relative;
 	color: white;
 	min-height: 50%;
 }
 
 .task-list-container .title {
 	margin-bottom: 20px;
+}
+
+.task-list {
+	flex-grow: 1;
 }
 
 .task-list-item {
@@ -87,6 +95,25 @@ body:hover {
 
 .task-list-item.selected .item-icon {
 	-webkit-mask-image: url('icons/check-circle.svg');
+}
+
+.task-list-container .add-btn {
+	-webkit-app-region: no-drag;
+	display: flex;
+	align-items: center;
+	opacity: 0.5;
+}
+
+.task-list-container .add-btn:hover {
+	opacity: 1;
+}
+
+.task-list-container .add-btn .icon {
+	-webkit-mask: url('icons/plus.svg') 0 0 / 14px 14px;
+	width: 14px;
+	height: 14px;
+	background-color: white;
+	margin-right: 8px;
 }
 
 #main {

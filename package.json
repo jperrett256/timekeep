@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "electron-store": "^3.2.0",
     "jquery": "^3.4.1"
   }
 }

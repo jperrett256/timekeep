@@ -1,4 +1,34 @@
 const { app, BrowserWindow, nativeImage, Menu, Tray, ipcMain } = require('electron');
+const Store = require('electron-store');
+const store = new Store();
+
+let state = {
+	tasks: store.get('tasks') || {},
+	currentTask: store.get('currentTask')
+};
+
+ipcMain.on('update-current-task', (event, task) => {
+	state.currentTask = task;
+});
+
+ipcMain.on('get-updated-task-state', (event) => {
+	event.reply('task-state-updated', state);
+});
+
+ipcMain.on('add-new-task', (event, name) => {
+	let task = {
+		name: name
+		// TODO task data
+	};
+	let id = Date.now();
+	state.tasks[id] = task;
+
+	if (!state.currentTask) {
+		state.currentTask = id;
+	}
+
+	event.reply('task-state-updated', state);
+});
 
 let tray = null;
 app.on('ready', function () {
